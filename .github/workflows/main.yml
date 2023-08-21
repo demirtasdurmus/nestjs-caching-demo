@@ -1,0 +1,29 @@
+name: Node.js CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm install
+
+      # You can also create a seperate job for the following processes
+      # Which can wait for each other in the configured order
+      # We will keep this like this for simplicity
+      - name: Lint code
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build application(simulates the deploy)
+        run: npm run build
