@@ -11,14 +11,21 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
+
+      # caching the dependency
+      - name: 'Cache Dependencies'
+        uses: 'actions/cache@v3'
+        id: cache-node-modules
+        with:
+          path: 'node_modules'
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install dependencies
+        # only run npm i if cache not found
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install
 
-      # You can also create a seperate job for the following processes
-      # Which can wait for each other in the configured order
-      # We will keep this like this for simplicity
       - name: Lint code
         run: npm run lint
 
