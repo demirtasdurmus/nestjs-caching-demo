@@ -13,18 +13,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # caching the dependency
-      - name: 'Cache Dependencies'
-        uses: 'actions/cache@v3'
-        id: cache-node-modules
-        with:
-          path: 'node_modules'
-          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Install dependencies
-        # only run npm i if cache not found
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm install
+        # We just added another step and relative path of the custom action
+      - name: Load & Cache Dependencies
+        uses: ./.github/actions/cached-deps
 
       - name: Lint code
         run: npm run lint
